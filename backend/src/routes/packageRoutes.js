@@ -15,7 +15,7 @@ const router = express.Router();
 router.post(
   "/",
   authenticate,
-  authorize("admin", "super_admin"),
+  authorize("admin"),
   validate(packageValidation.create),
   packageController.createPackage
 );
@@ -27,7 +27,7 @@ router.get("/:id", packageController.getPackage);
 router.put(
   "/:id",
   authenticate,
-  authorize("admin", "super_admin"),
+  authorize("admin"),
   validate(packageValidation.update),
   packageController.updatePackage
 );
@@ -35,14 +35,14 @@ router.put(
 router.delete(
   "/:id",
   authenticate,
-  authorize("admin", "super_admin"),
+  authorize("admin"),
   packageController.deletePackage
 );
 
 router.post(
   "/:id/restore",
   authenticate,
-  authorize("admin", "super_admin"),
+  authorize("admin"),
   packageController.restorePackage
 );
 
@@ -57,7 +57,7 @@ router.get("/stats/summary", packageController.getPackageStats);
 router.post(
   "/bundles",
   authenticate,
-  authorize("admin", "super_admin"),
+  authorize("admin"),
   validate(bundleValidation.create),
   bundleController.createBundle
 );
@@ -70,8 +70,7 @@ router.get(
     "super_agent",
     "dealer",
     "super_dealer",
-    "admin",
-    "super_admin"
+    "admin"
   ),
   bundleController.getAllBundles
 );
@@ -84,8 +83,7 @@ router.get(
     "super_agent",
     "dealer",
     "super_dealer",
-    "admin",
-    "super_admin"
+    "admin"
   ),
   bundleController.getBundleById
 );
@@ -93,7 +91,7 @@ router.get(
 router.put(
   "/bundles/:id",
   authenticate,
-  authorize("admin", "super_admin"),
+  authorize("admin"),
   validate(bundleValidation.update),
   bundleController.updateBundle
 );
@@ -101,7 +99,7 @@ router.put(
 router.delete(
   "/bundles/:id",
   authenticate,
-  authorize("admin", "super_admin"),
+  authorize("admin"),
   bundleController.deleteBundle
 );
 
@@ -128,8 +126,7 @@ router.get(
     "super_agent",
     "dealer",
     "super_dealer",
-    "admin",
-    "super_admin"
+    "admin"
   ),
   bundleController.getBundlesByProvider
 );
@@ -142,8 +139,7 @@ router.get(
     "super_agent",
     "dealer",
     "super_dealer",
-    "admin",
-    "super_admin"
+    "admin"
   ),
   bundleController.getBundlesByPackage
 );
@@ -160,7 +156,7 @@ router.get(
 router.get(
   "/bundles/analytics/summary",
   authenticate,
-  authorize("admin", "super_admin"),
+  authorize("admin"),
   bundleController.getBundleAnalytics
 );
 

@@ -89,13 +89,13 @@ class PackageService {
 
   // Update package
   async updatePackage(packageId, updateData, tenantId, userId) {
-    // For super admins, don't filter by tenantId
+    // For admins, don't filter by tenantId
     const query = {
       _id: packageId,
       isDeleted: false
     };
     
-    // Only filter by tenantId for non-super admin users
+    // Only filter by tenantId for non-admin users
     if (tenantId) {
       query.tenantId = tenantId;
     }
@@ -129,13 +129,13 @@ class PackageService {
 
   // Soft delete package
   async deletePackage(packageId, tenantId, userId) {
-    // For super admins, don't filter by tenantId
+    // For admins, don't filter by tenantId
     const query = {
       _id: packageId,
       isDeleted: false
     };
     
-    // Only filter by tenantId for non-super admin users
+    // Only filter by tenantId for non-admin users
     if (tenantId) {
       query.tenantId = tenantId;
     }
@@ -153,13 +153,13 @@ class PackageService {
 
   // Restore package
   async restorePackage(packageId, tenantId, userId) {
-    // For super admins, don't filter by tenantId
+    // For admins, don't filter by tenantId
     const query = {
       _id: packageId,
       isDeleted: true
     };
     
-    // Only filter by tenantId for non-super admin users
+    // Only filter by tenantId for non-admin users
     if (tenantId) {
       query.tenantId = tenantId;
     }

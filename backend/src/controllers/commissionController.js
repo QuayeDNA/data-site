@@ -103,8 +103,8 @@ class CommissionController {
         filters.endDate = new Date(endDate);
       }
 
-      // For non-super-admin users, only show paid commissions and their own pending daily commissions
-      if (userType !== "super_admin") {
+      // For non-admin users, only show paid commissions and their own pending daily commissions
+      if (userType !== "admin") {
         // Allow agents to see their own pending daily commissions for current month accumulation
         // But hide pending monthly commissions (which are finalized at month-end)
         if (!status) {
@@ -151,7 +151,7 @@ class CommissionController {
   }
 
   /**
-   * Get all commissions (super admin)
+   * Get all commissions (admin)
    */
   async getAllCommissions(req, res) {
     try {
@@ -547,9 +547,9 @@ class CommissionController {
     try {
       const { tenantId, userType } = req.user;
 
-      // For super admin users, don't filter by tenant (show all data)
+      // For admin users, don't filter by tenant (show all data)
       // For regular users, filter by their tenant
-      const statisticsTenantId = userType === "super_admin" ? null : tenantId;
+      const statisticsTenantId = userType === "admin" ? null : tenantId;
 
       const statistics = await commissionService.getCommissionStatistics(
         statisticsTenantId
@@ -570,7 +570,7 @@ class CommissionController {
 
   /**
    * Manually expire old commissions
-   * This endpoint allows super admins to manually trigger the expiry job
+   * This endpoint allows admins to manually trigger the expiry job
    * Useful for testing or forcing expiry outside the scheduled cron time
    */
   async expireOldCommissions(req, res) {
@@ -692,7 +692,7 @@ class CommissionController {
   }
 
   /**
-   * Get all monthly summaries (super admin)
+   * Get all monthly summaries (admin)
    */
   async getAllMonthlySummaries(req, res) {
     try {
@@ -704,8 +704,8 @@ class CommissionController {
       if (paymentStatus) options.paymentStatus = paymentStatus;
       if (month) options.month = month;
 
-      // For super admin, don't filter by tenant
-      const filterTenantId = userType === "super_admin" ? null : tenantId;
+      // For admin, don't filter by tenant
+      const filterTenantId = userType === "admin" ? null : tenantId;
 
       const summaries = await commissionService.getAllMonthlySummaries(
         filterTenantId,
@@ -732,9 +732,9 @@ class CommissionController {
     try {
       const { tenantId, userType, userId } = req.user;
 
-      // For super admin, show all; for agents, show only their own
-      const filterTenantId = userType === "super_admin" ? null : tenantId;
-      const filterAgentId = userType === "super_admin" ? null : userId;
+      // For admin, show all; for agents, show only their own
+      const filterTenantId = userType === "admin" ? null : tenantId;
+      const filterAgentId = userType === "admin" ? null : userId;
 
       const stats = await commissionService.getCurrentMonthStatistics(
         filterTenantId,

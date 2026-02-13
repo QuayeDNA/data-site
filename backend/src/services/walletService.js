@@ -429,7 +429,7 @@ class WalletService {
 
   /**
    * Get wallet analytics for a tenant or all users
-   * @param {string|null} tenantId - Tenant ID (null for super admin to get all)
+   * @param {string|null} tenantId - Tenant ID (null for admin to get all)
    * @param {object} filter - Filter criteria
    * @returns {Promise<object>} Analytics object
    */

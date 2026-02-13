@@ -236,7 +236,7 @@ class WalletController {
   }
 
   /**
-   * Top up a wallet (admin/super_admin only)
+   * Top up a wallet (admin/admin only)
    */
   async topUpWallet(req, res) {
     try {
@@ -288,7 +288,7 @@ class WalletController {
   }
 
   /**
-   * Process a top-up request (approve/reject) (admin/super_admin only)
+   * Process a top-up request (approve/reject) (admin/admin only)
    */
   async processTopUpRequest(req, res) {
     try {
@@ -347,7 +347,7 @@ class WalletController {
   }
 
   /**
-   * Get pending top-up requests (admin/super_admin only)
+   * Get pending top-up requests (admin/admin only)
    */
   async getPendingTopUpRequests(req, res) {
     try {
@@ -399,7 +399,7 @@ class WalletController {
   }
 
   /**
-   * Get wallet analytics (admin/super_admin only)
+   * Get wallet analytics (admin/admin only)
    */
   async getWalletAnalytics(req, res) {
     try {
@@ -524,7 +524,7 @@ class WalletController {
   }
 
   /**
-   * Get all wallet transactions performed by admin (super_admin only)
+   * Get all wallet transactions performed by admin (admin only)
    */
   async getAdminTransactions(req, res) {
     try {

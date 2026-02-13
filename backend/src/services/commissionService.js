@@ -179,7 +179,7 @@ class CommissionService {
   }
 
   /**
-   * Get all commission records (for super admin)
+   * Get all commission records (for admin)
    * @param {Object} filters - Filter options
    * @returns {Promise<Array>} Commission records
    */
@@ -243,7 +243,7 @@ class CommissionService {
    * Notifications are sent AFTER transaction commits to avoid sending premature notifications.
    *
    * @param {string} commissionId - Commission record ID
-   * @param {string} paidBy - User ID who is paying (typically super admin)
+   * @param {string} paidBy - User ID who is paying (typically admin)
    * @param {string} paymentReference - Optional payment reference for audit trail
    * @returns {Promise<Object>} Updated commission record
    */
@@ -1206,7 +1206,7 @@ class CommissionService {
 
   /**
    * Get commission statistics
-   * @param {string|null} tenantId - Tenant ID (null for super admin to show all)
+   * @param {string|null} tenantId - Tenant ID (null for admin to show all)
    * @returns {Promise<Object>} Commission statistics
    */
   async getCommissionStatistics(tenantId) {
@@ -1531,9 +1531,9 @@ class CommissionService {
   }
 
   /**
-   * Get monthly summaries for all agents (tenant/super admin)
+   * Get monthly summaries for all agents (tenant/admin)
    *
-   * @param {string|null} tenantId - Tenant ID (null for super admin)
+   * @param {string|null} tenantId - Tenant ID (null for admin)
    * @param {Object} options - Query options
    * @returns {Promise<Array>} Monthly summaries
    */
@@ -1545,7 +1545,7 @@ class CommissionService {
           options
         );
       } else {
-        // Super admin - get all summaries
+        // admin - get all summaries
         const query = {};
 
         if (options.paymentStatus) {
@@ -1570,7 +1570,7 @@ class CommissionService {
   /**
    * Get current month commission statistics (separated from historical)
    *
-   * @param {string|null} tenantId - Tenant ID (null for super admin)
+   * @param {string|null} tenantId - Tenant ID (null for admin)
    * @param {string|null} agentId - Agent ID (for agent-specific stats)
    * @returns {Promise<Object>} Current month statistics
    */
@@ -1759,9 +1759,9 @@ class CommissionService {
           periodEnd: commissionRecord.periodEnd,
         });
 
-        // Also notify super admins of the update
-        const superAdmins = await User.find({ userType: "super_admin" });
-        for (const admin of superAdmins) {
+        // Also notify admins of the update
+        const admins = await User.find({ userType: "admin" });
+        for (const admin of admins) {
           websocketService.sendCommissionUpdatedToUser(admin._id.toString(), {
             agentId: agentId.toString(),
             agentName: order.createdBy.fullName,
@@ -1918,7 +1918,7 @@ class CommissionService {
         }
       }
 
-      // Send notifications to agents and super admins
+      // Send notifications to agents and admins
       for (const summary of monthlySummaries) {
         try {
           const agent = summary.agentId;
@@ -1952,9 +1952,9 @@ class CommissionService {
         }
       }
 
-      // Notify super admins
-      const superAdmins = await User.find({ userType: "super_admin" });
-      for (const admin of superAdmins) {
+      // Notify admins
+      const admins = await User.find({ userType: "admin" });
+      for (const admin of admins) {
         try {
           await notificationService.createNotification({
             userId: admin._id,

@@ -35,7 +35,7 @@ router.post(
 router.get(
   "/analytics/summary",
   authenticate,
-  authorize("agent", "super_agent", "dealer", "super_dealer", "super_admin"),
+  authorize("agent", "super_agent", "dealer", "super_dealer", "admin"),
   orderController.getAnalytics
 );
 
@@ -47,11 +47,11 @@ router.get(
   orderController.getAgentAnalytics
 );
 
-// Monthly revenue for business users and super admin
+// Monthly revenue for business users and admin
 router.get(
   "/analytics/monthly-revenue",
   authenticate,
-  authorize("agent", "super_agent", "dealer", "super_dealer", "super_admin"),
+  authorize("agent", "super_agent", "dealer", "super_dealer", "admin"),
   orderController.getMonthlyRevenue
 );
 
@@ -59,45 +59,45 @@ router.get(
 router.get(
   "/analytics/daily-spending",
   authenticate,
-  authorize("agent", "super_agent", "dealer", "super_dealer", "super_admin"),
+  authorize("agent", "super_agent", "dealer", "super_dealer", "admin"),
   orderController.getDailySpending
 );
 
-// Order processing - RESTRICTED TO SUPER ADMIN ONLY
+// Order processing - RESTRICTED TO admin ONLY
 router.post(
   "/:orderId/items/:itemId/process",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   orderController.processOrderItem
 );
 
 router.post(
   "/:id/process-bulk",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   orderController.processBulkOrder
 );
 
-// Bulk order processing - NEW ENDPOINT FOR SUPER ADMIN
+// Bulk order processing - NEW ENDPOINT FOR admin
 router.post(
   "/bulk-process",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   orderController.bulkProcessOrders
 );
 
-// Bulk reception status update - NEW ENDPOINT FOR SUPER ADMIN
+// Bulk reception status update - NEW ENDPOINT FOR admin
 router.post(
   "/bulk-reception-status",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   orderController.bulkUpdateReceptionStatus
 );
 
 router.post(
   "/:id/cancel",
   authenticate,
-  authorize("agent", "super_agent", "dealer", "super_dealer", "super_admin"),
+  authorize("agent", "super_agent", "dealer", "super_dealer", "admin"),
   validate(orderValidation.cancel),
   orderController.cancelOrder
 );
@@ -113,7 +113,7 @@ router.post(
 router.patch(
   "/:id/status",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   orderController.updateOrderStatus
 );
 
@@ -121,7 +121,7 @@ router.patch(
 router.post(
   "/process-drafts",
   authenticate,
-  authorize("agent", "super_agent", "dealer", "super_dealer", "super_admin"),
+  authorize("agent", "super_agent", "dealer", "super_dealer", "admin"),
   orderController.processDraftOrders
 );
 
@@ -129,15 +129,15 @@ router.post(
 router.post(
   "/process-draft/:orderId",
   authenticate,
-  authorize("agent", "super_agent", "dealer", "super_dealer", "super_admin"),
+  authorize("agent", "super_agent", "dealer", "super_dealer", "admin"),
   orderController.processSingleDraftOrder
 );
 
-// Update reception status - RESTRICTED TO SUPER ADMIN ONLY
+// Update reception status - RESTRICTED TO admin ONLY
 router.patch(
   "/:id/reception-status",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   orderController.updateReceptionStatus
 );
 
@@ -145,7 +145,7 @@ router.patch(
 router.get(
   "/reported",
   authenticate,
-  authorize("agent", "super_agent", "dealer", "super_dealer", "super_admin"),
+  authorize("agent", "super_agent", "dealer", "super_dealer", "admin"),
   orderController.getReportedOrders
 );
 
@@ -153,14 +153,14 @@ router.get(
 router.get(
   "/",
   authenticate,
-  authorize("agent", "super_agent", "dealer", "super_dealer", "super_admin"),
+  authorize("agent", "super_agent", "dealer", "super_dealer", "admin"),
   orderController.getOrders
 );
 
 router.get(
   "/:id",
   authenticate,
-  authorize("agent", "super_agent", "dealer", "super_dealer", "super_admin"),
+  authorize("agent", "super_agent", "dealer", "super_dealer", "admin"),
   orderController.getOrder
 );
 

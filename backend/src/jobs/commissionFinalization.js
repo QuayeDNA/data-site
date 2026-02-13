@@ -10,7 +10,7 @@ import logger from "../utils/logger.js";
  * This replaces the old commission generation/archive/expire workflow with a simpler system:
  * - Marks all previous month's commission records as final (isFinal=true)
  * - Sets finalizedAt timestamp
- * - Sends notifications to agents and super admins
+ * - Sends notifications to agents and admins
  * - Agents can see current month accumulating in real-time, previous month as "pending payment"
  */
 

@@ -142,7 +142,7 @@ const bundleService = {
         };
 
         // Only include sensitive fields for admin users
-        if (userType === "admin" || userType === "super_admin") {
+        if (userType === "admin" || userType === "admin") {
           return {
             ...baseBundle,
             pricingTiers: enhancedBundle.pricingTiers, // Include pricing tiers for admins

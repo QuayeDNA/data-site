@@ -5,7 +5,7 @@ import { authenticate, authorize } from "../middlewares/auth.js";
 import validate from "../middlewares/validate.js";
 import {
   registerAgentValidation,
-  registerSuperAdminValidation,
+  registerAdminValidation,
   loginValidation,
   forgotPasswordValidation,
   resetPasswordValidation,
@@ -15,7 +15,7 @@ const router = express.Router();
 
 // Create validation middlewares (same pattern as product routes)
 const validateRegisterAgent = validate(registerAgentValidation);
-const validateRegisterSuperAdmin = validate(registerSuperAdminValidation);
+const validateRegisterAdmin = validate(registerAdminValidation);
 const validateLogin = validate(loginValidation);
 const validateForgotPassword = validate(forgotPasswordValidation);
 const validateResetPassword = validate(resetPasswordValidation);
@@ -29,9 +29,9 @@ router.post(
   authController.registerAgent
 );
 router.post(
-  "/register/super-admin",
-  validateRegisterSuperAdmin,
-  authController.registerSuperAdmin
+  "/register/admin",
+  validateRegisterAdmin,
+  authController.registerAdmin
 );
 router.post("/verify-account", authController.verifyAccount);
 router.post("/resend-verification", authController.resendVerification);
@@ -48,47 +48,47 @@ router.post(
 );
 router.get("/debug-user", authenticate, authController.debugUser);
 
-// Super admin user management routes
+// admin user management routes
 router.get(
   "/users",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   authController.listUsers
 );
 router.get(
   "/users/:id",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   authController.getUserById
 );
 router.patch(
   "/users/:id/status",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   authController.updateAgentStatus
 );
 router.patch(
   "/users/:id",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   authController.updateUser
 );
 router.post(
   "/users/:id/reset-password",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   authController.resetUserPassword
 );
 router.delete(
   "/users/:id",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   authController.deleteUser
 );
 router.post(
   "/users/:id/impersonate",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   authController.impersonateUser
 );
 

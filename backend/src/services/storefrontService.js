@@ -50,7 +50,7 @@ class StorefrontService {
     
     // Notify admins about new storefront
     try {
-      const admins = await User.find({ userType: 'super_admin', isActive: true }).select('_id');
+      const admins = await User.find({ userType: 'admin', isActive: true }).select('_id');
       for (const admin of admins) {
         await notificationService.createInAppNotification(
           admin._id.toString(),
@@ -717,7 +717,7 @@ class StorefrontService {
     
     // Notify admins about verified storefront order ready for processing
     try {
-      const admins = await User.find({ userType: 'super_admin', isActive: true }).select('_id');
+      const admins = await User.find({ userType: 'admin', isActive: true }).select('_id');
       for (const admin of admins) {
         await notificationService.createInAppNotification(
           admin._id.toString(),
@@ -836,7 +836,7 @@ class StorefrontService {
   }
   
   // =========================================================================
-  // Admin Operations (Super Admin)
+  // Admin Operations (admin)
   // =========================================================================
   
   /**

@@ -238,7 +238,6 @@ class SettingsService {
         "dealer",
         "super_dealer",
         "admin",
-        "super_admin",
       ];
       if (!validRoles.includes(newRole)) {
         throw new Error("Invalid role");

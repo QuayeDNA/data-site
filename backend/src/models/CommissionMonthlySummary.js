@@ -162,7 +162,7 @@ const commissionMonthlySummarySchema = new mongoose.Schema(
     archivedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      // Super admin who triggered archival (null for automatic)
+      // admin who triggered archival (null for automatic)
     },
 
     // Notes

@@ -24,8 +24,8 @@ export const createUserRateLimit = (options = {}) => {
       return req.user?.id || req.ip;
     },
     skip: (req) => {
-      // Skip rate limiting for super admins
-      return req.user?.userType === 'super_admin';
+      // Skip rate limiting for admins
+      return req.user?.userType === 'admin';
     }
   });
 };
@@ -43,7 +43,7 @@ export const apiEndpointLimits = {
     standardHeaders: true,
     legacyHeaders: false,
     keyGenerator: (req) => req.user?.id || req.ip,
-    skip: (req) => req.user?.userType === 'super_admin'
+    skip: (req) => req.user?.userType === 'admin'
   }),
 
   // Medium-frequency endpoints (like fetching orders, user management)
@@ -57,7 +57,7 @@ export const apiEndpointLimits = {
     standardHeaders: true,
     legacyHeaders: false,
     keyGenerator: (req) => req.user?.id || req.ip,
-    skip: (req) => req.user?.userType === 'super_admin'
+    skip: (req) => req.user?.userType === 'admin'
   }),
 
   // Low-frequency endpoints (like authentication, sensitive operations)
@@ -85,5 +85,5 @@ export const burstProtection = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   keyGenerator: (req) => req.user?.id || req.ip,
-  skip: (req) => req.user?.userType === 'super_admin'
+  skip: (req) => req.user?.userType === 'admin'
 });

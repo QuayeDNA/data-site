@@ -9,19 +9,19 @@ import {
 
 const router = express.Router();
 
-// Get commission settings (super admin only)
+// Get commission settings (admin only)
 router.get(
   "/settings",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   commissionController.getCommissionSettings
 );
 
-// Update commission settings (super admin only)
+// Update commission settings (admin only)
 router.put(
   "/settings",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   commissionController.updateCommissionSettings
 );
 
@@ -33,11 +33,11 @@ router.get(
   commissionController.getAgentCommissions
 );
 
-// Get all commissions (super admin only)
+// Get all commissions (admin only)
 router.get(
   "/",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   commissionController.getAllCommissions
 );
 
@@ -45,7 +45,7 @@ router.get(
 router.post(
   "/calculate",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   commissionController.calculateCommission
 );
 
@@ -53,7 +53,7 @@ router.post(
 router.post(
   "/records",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   commissionController.createCommissionRecord
 );
 
@@ -61,7 +61,7 @@ router.post(
 router.put(
   "/:commissionId/pay",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   commissionController.payCommission
 );
 
@@ -69,7 +69,7 @@ router.put(
 router.put(
   "/pay-multiple",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   commissionController.payMultipleCommissions
 );
 
@@ -77,7 +77,7 @@ router.put(
 router.put(
   "/:commissionId/reject",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   commissionController.rejectCommission
 );
 
@@ -85,7 +85,7 @@ router.put(
 router.put(
   "/reject-multiple",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   commissionController.rejectMultipleCommissions
 );
 
@@ -93,7 +93,7 @@ router.put(
 router.post(
   "/generate-monthly",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   commissionController.generateMonthlyCommissions
 );
 
@@ -101,7 +101,7 @@ router.post(
 router.post(
   "/generate-daily",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   commissionController.generateDailyCommissions
 );
 
@@ -109,7 +109,7 @@ router.post(
 router.post(
   "/reset-monthly",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   commissionController.resetMonthlyCommissions
 );
 
@@ -117,7 +117,7 @@ router.post(
 router.post(
   "/manual-reset",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   commissionController.manualCommissionReset
 );
 
@@ -125,7 +125,7 @@ router.post(
 router.post(
   "/expire-old",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   commissionController.expireOldCommissions
 );
 
@@ -133,7 +133,7 @@ router.post(
 router.post(
   "/archive-month",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   commissionController.archiveMonthCommissions
 );
 
@@ -145,11 +145,11 @@ router.get(
   commissionController.getAgentMonthlySummaries
 );
 
-// Get all monthly summaries (super admin)
+// Get all monthly summaries (admin)
 router.get(
   "/monthly-summaries",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   commissionController.getAllMonthlySummaries
 );
 

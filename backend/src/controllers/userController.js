@@ -133,12 +133,12 @@ class UserController {
         if (userType) {
           query.userType = userType;
         }
-      } else if (requestUserType === "super_admin") {
-        // Super admin can see all users
+      } else if (requestUserType === "admin") {
+        // admin can see all users
         if (userType) {
           query.userType = userType;
         }
-        // Add status filter for super admin
+        // Add status filter for admin
         if (status) {
           query.status = status;
         }
@@ -187,7 +187,7 @@ class UserController {
     }
   }
 
-  // Get users with wallet information (super admin only)
+  // Get users with wallet information (admin only)
   async getUsersWithWallet(req, res) {
     try {
       const {
@@ -199,11 +199,11 @@ class UserController {
       } = req.query;
       const { userType: requestUserType } = req.user;
 
-      // Only super admin can access this endpoint
-      if (requestUserType !== "super_admin") {
+      // Only admin can access this endpoint
+      if (requestUserType !== "admin") {
         return res.status(403).json({
           success: false,
-          message: "Access denied. Super admin only.",
+          message: "Access denied. admin only.",
         });
       }
 
@@ -269,7 +269,7 @@ class UserController {
         }).select(
           "-password -refreshToken -verificationToken -resetPasswordToken"
         );
-      } else if (requestUserType === "super_admin") {
+      } else if (requestUserType === "admin") {
         user = await User.findById(id).select(
           "-password -refreshToken -verificationToken -resetPasswordToken"
         );
@@ -313,7 +313,7 @@ class UserController {
       const { isVerified, subscriptionStatus, userType } = req.body;
       const { userType: requestUserType } = req.user;
 
-      if (requestUserType !== "super_admin") {
+      if (requestUserType !== "admin") {
         return res.status(403).json({
           success: false,
           message: "Access denied. Admin privileges required.",
@@ -342,7 +342,7 @@ class UserController {
         user.subscriptionStatus = subscriptionStatus;
       }
 
-      // Allow super admins to change user types
+      // Allow admins to change user types
       if (
         userType &&
         [
@@ -350,7 +350,7 @@ class UserController {
           "super_agent",
           "dealer",
           "super_dealer",
-          "super_admin",
+          "admin",
         ].includes(userType)
       ) {
         user.userType = userType;
@@ -379,7 +379,7 @@ class UserController {
       const { id } = req.params;
       const { userType: requestUserType, userId: requestUserId } = req.user;
 
-      if (requestUserType !== "super_admin") {
+      if (requestUserType !== "admin") {
         return res.status(403).json({
           success: false,
           message: "Access denied. Admin privileges required.",
@@ -454,7 +454,7 @@ class UserController {
           unverifiedSubordinates: totalSubordinates - verifiedSubordinates,
           recentSubordinates,
         };
-      } else if (requestUserType === "super_admin") {
+      } else if (requestUserType === "admin") {
         // Admin stats - all users
         const totalUsers = await User.countDocuments();
         const totalAgents = await User.countDocuments({ userType: "agent" });
@@ -496,15 +496,15 @@ class UserController {
     }
   }
 
-  // Get comprehensive dashboard statistics for super admin
+  // Get comprehensive dashboard statistics for admin
   async getDashboardStats(req, res) {
     try {
       const { userType: requestUserType } = req.user;
 
-      if (requestUserType !== "super_admin") {
+      if (requestUserType !== "admin") {
         return res.status(403).json({
           success: false,
-          message: "Access denied. Super admin privileges required.",
+          message: "Access denied. admin privileges required.",
         });
       }
 
@@ -718,15 +718,15 @@ class UserController {
     }
   }
 
-  // Get chart data for super admin dashboard
+  // Get chart data for admin dashboard
   async getChartData(req, res) {
     try {
       const { userType: requestUserType } = req.user;
 
-      if (requestUserType !== "super_admin") {
+      if (requestUserType !== "admin") {
         return res.status(403).json({
           success: false,
-          message: "Access denied. Super admin privileges required.",
+          message: "Access denied. admin privileges required.",
         });
       }
 
@@ -750,7 +750,7 @@ class UserController {
         userTypes: {
           agents: 0,
           customers: 0,
-          super_admins: 0,
+          admins: 0,
         },
       };
 
@@ -837,8 +837,8 @@ class UserController {
         if (item._id === "agent") chartData.userTypes.agents = item.count;
         else if (item._id === "customer")
           chartData.userTypes.customers = item.count;
-        else if (item._id === "super_admin")
-          chartData.userTypes.super_admins = item.count;
+        else if (item._id === "admin")
+          chartData.userTypes.admins = item.count;
       });
 
       res.json({

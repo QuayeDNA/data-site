@@ -40,35 +40,35 @@ router.get(
   userController.getAfaBundles
 );
 
-// User management (All agent types can view their subordinates, Super admin can view all)
+// User management (All agent types can view their subordinates, admin can view all)
 router.get(
   "/",
   authenticate,
-  authorize("agent", "super_agent", "dealer", "super_dealer", "super_admin"),
+  authorize("agent", "super_agent", "dealer", "super_dealer", "admin"),
   userController.getUsers
 );
 router.get(
   "/with-wallet",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   userController.getUsersWithWallet
 );
 router.get(
   "/stats",
   authenticate,
-  authorize("agent", "super_agent", "dealer", "super_dealer", "super_admin"),
+  authorize("agent", "super_agent", "dealer", "super_dealer", "admin"),
   userController.getUserStats
 );
 router.get(
   "/dashboard-stats",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   userController.getDashboardStats
 );
 router.get(
   "/chart-data",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   userController.getChartData
 );
 router.get("/:id", authenticate, userController.getUserById);
@@ -77,14 +77,14 @@ router.get("/:id", authenticate, userController.getUserById);
 router.put(
   "/:id/status",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   validate(userValidation.updateUserStatus),
   userController.updateUserStatus
 );
 router.delete(
   "/:id",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   userController.deleteUser
 );
 

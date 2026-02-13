@@ -322,7 +322,7 @@ const bundleController = {
     }
   },
 
-  // Get bundle pricing tiers (super admin only)
+  // Get bundle pricing tiers (admin only)
   getBundlePricing: async (req, res) => {
     try {
       const { id } = req.params;
@@ -354,7 +354,7 @@ const bundleController = {
     }
   },
 
-  // Update bundle pricing tiers (super admin only)
+  // Update bundle pricing tiers (admin only)
   updateBundlePricing: async (req, res) => {
     try {
       const { id } = req.params;
@@ -420,7 +420,7 @@ const bundleController = {
     }
   },
 
-  // Bulk update pricing for multiple bundles (super admin only)
+  // Bulk update pricing for multiple bundles (admin only)
   bulkUpdatePricing: async (req, res) => {
     try {
       const { updates } = req.body; // Array of { bundleId, pricingTiers }

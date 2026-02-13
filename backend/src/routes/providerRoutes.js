@@ -22,7 +22,7 @@ router.get(
 router.post(
   '/',
   authenticate,
-  authorize('admin', 'super_admin'), // Allow both admin and super admin
+  authorize('admin'), // Allow both admin and admin
   validateCreate,
   providerController.createProvider
 );
@@ -37,7 +37,7 @@ router.get(
 router.get(
   '/analytics',
   authenticate,
-  authorize('admin', 'super_admin'),
+  authorize('admin'),
   providerController.getProviderAnalytics
 );
 
@@ -52,7 +52,7 @@ router.get(
 router.put(
   '/:id',
   authenticate,
-  authorize('admin', 'super_admin'), // Allow both admin and super admin
+  authorize('admin'), // Allow both admin and admin
   validateUpdate,
   providerController.updateProvider
 );
@@ -60,7 +60,7 @@ router.put(
 router.delete(
   '/:id',
   authenticate,
-  authorize('admin', 'super_admin'), // Allow both admin and super admin
+  authorize('admin'), // Allow both admin and admin
   validateGetById,
   providerController.softDeleteProvider
 );
@@ -68,7 +68,7 @@ router.delete(
 router.post(
   '/:id/restore',
   authenticate,
-  authorize('admin', 'super_admin'), // Allow both admin and super admin
+  authorize('admin'), // Allow both admin and admin
   validateGetById,
   providerController.restoreProvider
 );

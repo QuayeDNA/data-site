@@ -17,7 +17,7 @@ const WALLET_ENABLED_USER_TYPES = [
 const TENANT_USER_TYPES = ["agent", "super_agent", "dealer", "super_dealer"];
 
 // Define admin user types
-const ADMIN_USER_TYPES = ["admin", "super_admin"];
+const ADMIN_USER_TYPES = ["admin"];
 
 /**
  * Check if a user type is a business user (can act as an agent/tenant)

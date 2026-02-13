@@ -34,20 +34,20 @@ router.get(
   bundleController.getProviderBundleAnalytics
 );
 
-// Pricing management routes (super admin only)
+// Pricing management routes (admin only)
 router.get(
   "/:id/pricing",
-  authorize("super_admin"),
+  authorize("admin"),
   bundleController.getBundlePricing
 );
 router.put(
   "/:id/pricing",
-  authorize("super_admin"),
+  authorize("admin"),
   bundleController.updateBundlePricing
 );
 router.post(
   "/pricing/bulk-update",
-  authorize("super_admin"),
+  authorize("admin"),
   bundleController.bulkUpdatePricing
 );
 

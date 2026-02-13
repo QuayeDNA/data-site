@@ -375,13 +375,13 @@ router.get(
 );
 
 // =========================================================================
-// Admin Routes (Super Admin Only)
+// Admin Routes (admin Only)
 // =========================================================================
 
 /**
  * @route GET /api/storefront/admin/storefronts
  * @desc Get all storefronts (with suspended filter)
- * @access Private (Super Admin)
+ * @access Private (admin)
  */
 router.get(
   '/admin/storefronts',
@@ -399,7 +399,7 @@ router.get(
 /**
  * @route GET /api/storefront/admin/stats
  * @desc Get storefront platform stats (includes suspendedStores, autoApprove setting)
- * @access Private (Super Admin)
+ * @access Private (admin)
  */
 router.get(
   '/admin/stats',
@@ -411,7 +411,7 @@ router.get(
 /**
  * @route PUT /api/storefront/admin/storefronts/:storefrontId/approve
  * @desc Approve a storefront
- * @access Private (Super Admin)
+ * @access Private (admin)
  */
 router.put(
   '/admin/storefronts/:storefrontId/approve',
@@ -424,7 +424,7 @@ router.put(
 /**
  * @route PUT /api/storefront/admin/storefronts/:storefrontId/suspend
  * @desc Suspend a storefront (blocks agent AND public access)
- * @access Private (Super Admin)
+ * @access Private (admin)
  */
 router.put(
   '/admin/storefronts/:storefrontId/suspend',
@@ -440,7 +440,7 @@ router.put(
 /**
  * @route PUT /api/storefront/admin/storefronts/:storefrontId/unsuspend
  * @desc Unsuspend a storefront (lifts admin ban)
- * @access Private (Super Admin)
+ * @access Private (admin)
  */
 router.put(
   '/admin/storefronts/:storefrontId/unsuspend',
@@ -453,7 +453,7 @@ router.put(
 /**
  * @route DELETE /api/storefront/admin/storefronts/:storefrontId
  * @desc Delete a storefront (graceful - checks orders, notifies agent)
- * @access Private (Super Admin)
+ * @access Private (admin)
  */
 router.delete(
   '/admin/storefronts/:storefrontId',
@@ -469,7 +469,7 @@ router.delete(
 /**
  * @route PUT /api/storefront/admin/settings/auto-approve
  * @desc Toggle auto-approve for new storefronts
- * @access Private (Super Admin)
+ * @access Private (admin)
  */
 router.put(
   '/admin/settings/auto-approve',

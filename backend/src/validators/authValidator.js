@@ -89,7 +89,7 @@ export const resetPasswordValidation = [
     ),
 ];
 
-export const registerSuperAdminValidation = [
+export const registerAdminValidation = [
   body("fullName")
     .trim()
     .notEmpty()

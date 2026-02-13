@@ -3,7 +3,7 @@ import providerService from '../services/providerService.js';
 import logger from '../utils/logger.js';
 
 class ProviderController {
-  // Create provider (Admin/Super Admin only)
+  // Create provider (Admin/admin only)
   async createProvider(req, res) {
     try {
       const { userId } = req.user;
@@ -117,7 +117,7 @@ class ProviderController {
     }
   }
 
-  // Update provider (Admin/Super Admin only)
+  // Update provider (Admin/admin only)
   async updateProvider(req, res) {
     try {
       const { userId } = req.user;
@@ -143,7 +143,7 @@ class ProviderController {
     }
   }
 
-  // Soft delete provider (Admin/Super Admin only)
+  // Soft delete provider (Admin/admin only)
   async softDeleteProvider(req, res) {
     try {
       const { userId } = req.user;
@@ -168,7 +168,7 @@ class ProviderController {
     }
   }
 
-  // Restore provider (Admin/Super Admin only)
+  // Restore provider (Admin/admin only)
   async restoreProvider(req, res) {
     try {
       const { userId } = req.user;

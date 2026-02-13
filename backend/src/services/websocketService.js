@@ -356,15 +356,15 @@ class WebSocketService {
     );
   }
 
-  // Broadcast new order to all super admins
-  broadcastOrderCreatedToAdmins(orderData, superAdminIds) {
-    if (!Array.isArray(superAdminIds) || superAdminIds.length === 0) {
-      logger.warn("No super admin IDs provided for order broadcast");
+  // Broadcast new order to all admins
+  broadcastOrderCreatedToAdmins(orderData, adminIds) {
+    if (!Array.isArray(adminIds) || adminIds.length === 0) {
+      logger.warn("No admin IDs provided for order broadcast");
       return;
     }
 
     let successCount = 0;
-    superAdminIds.forEach((adminId) => {
+    adminIds.forEach((adminId) => {
       const ws = this.clients.get(adminId.toString());
       if (ws && ws.readyState === 1) {
         try {
@@ -385,17 +385,17 @@ class WebSocketService {
     });
 
     logger.info(
-      `Order creation broadcast to ${successCount} of ${superAdminIds.length} admins`
+      `Order creation broadcast to ${successCount} of ${adminIds.length} admins`
     );
   }
 
-  // Send order status update to user and all super admins
-  broadcastOrderStatusUpdate(orderData, userId, superAdminIds = []) {
+  // Send order status update to user and all admins
+  broadcastOrderStatusUpdate(orderData, userId, adminIds = []) {
     // Send to order creator
     this.sendOrderUpdateToUser(userId.toString(), orderData);
 
-    // Send to all super admins
-    superAdminIds.forEach((adminId) => {
+    // Send to all admins
+    adminIds.forEach((adminId) => {
       const ws = this.clients.get(adminId.toString());
       if (ws && ws.readyState === 1) {
         try {
@@ -415,7 +415,7 @@ class WebSocketService {
     });
 
     logger.info(
-      `Order status update sent to user ${userId} and ${superAdminIds.length} admins`
+      `Order status update sent to user ${userId} and ${adminIds.length} admins`
     );
   }
 

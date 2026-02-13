@@ -51,7 +51,7 @@ class UserService {
         if (userType) {
           query.userType = userType;
         }
-      } else if (requestUserType === "super_admin") {
+      } else if (requestUserType === "admin") {
         if (userType) {
           query.userType = userType;
         }
@@ -188,7 +188,7 @@ class UserService {
           unverifiedSubordinates: totalSubordinates - verifiedSubordinates,
           recentSubordinates,
         };
-      } else if (requestUserType === "super_admin") {
+      } else if (requestUserType === "admin") {
         // Admin stats - all users
         const [
           totalUsers,
@@ -338,7 +338,7 @@ class UserService {
           "super_agent",
           "dealer",
           "super_dealer",
-          "super_admin",
+          "admin",
         ].includes(statusUpdates.userType)
       ) {
         user.userType = statusUpdates.userType;

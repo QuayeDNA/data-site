@@ -4,60 +4,60 @@ import { authenticate, authorize } from "../middlewares/auth.js";
 
 const router = express.Router();
 
-// Admin routes - require super_admin role
+// Admin routes - require admin role
 router.post(
   "/",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   announcementController.createAnnouncement
 );
 
 router.get(
   "/all",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   announcementController.getAllAnnouncements
 );
 
 router.get(
   "/templates",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   announcementController.getTemplates
 );
 
 router.get(
   "/:id",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   announcementController.getAnnouncementById
 );
 
 router.put(
   "/:id",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   announcementController.updateAnnouncement
 );
 
 router.delete(
   "/:id",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   announcementController.deleteAnnouncement
 );
 
 router.get(
   "/:id/stats",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   announcementController.getAnnouncementStats
 );
 
 router.post(
   "/:id/broadcast",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   announcementController.broadcastAnnouncement
 );
 

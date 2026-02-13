@@ -86,8 +86,8 @@ class PackageController {
       const { tenantId, userId, userType } = req.user;
       const { id } = req.params;
       
-      // For super admins, don't pass tenantId
-      const effectiveTenantId = userType === 'super_admin' ? null : tenantId;
+      // For admins, don't pass tenantId
+      const effectiveTenantId = userType === 'admin' ? null : tenantId;
       
       const packageGroup = await packageService.updatePackage(id, req.body, effectiveTenantId, userId);
       
@@ -110,8 +110,8 @@ class PackageController {
       const { tenantId, userId, userType } = req.user;
       const { id } = req.params;
       
-      // For super admins, don't pass tenantId
-      const effectiveTenantId = userType === 'super_admin' ? null : tenantId;
+      // For admins, don't pass tenantId
+      const effectiveTenantId = userType === 'admin' ? null : tenantId;
       
       await packageService.deletePackage(id, effectiveTenantId, userId);
       
@@ -134,8 +134,8 @@ class PackageController {
       const { tenantId, userId, userType } = req.user;
       const { id } = req.params;
       
-      // For super admins, don't pass tenantId
-      const effectiveTenantId = userType === 'super_admin' ? null : tenantId;
+      // For admins, don't pass tenantId
+      const effectiveTenantId = userType === 'admin' ? null : tenantId;
       
       const packageGroup = await packageService.restorePackage(id, effectiveTenantId, userId);
       

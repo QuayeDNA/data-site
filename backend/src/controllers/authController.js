@@ -122,7 +122,7 @@ class AuthController {
       res.status(201).json({
         success: true,
         message: requireApproval
-          ? `${userType} account created successfully. Your account is pending approval by a super admin.`
+          ? `${userType} account created successfully. Your account is pending approval by a admin.`
           : `${userType} account created successfully. You can now log in.`,
         agentCode: agentCode,
         userType: userType,
@@ -175,7 +175,7 @@ class AuthController {
             user.isActive === false
               ? "Your account has been deactivated by an administrator."
               : user.status === "pending"
-              ? "Your account is pending approval by a super admin."
+              ? "Your account is pending approval by a admin."
               : "Your account has been rejected. Please contact support.",
         });
       }
@@ -250,7 +250,7 @@ class AuthController {
         token: accessToken,
         refreshToken: refreshToken, // Also send in response for frontend storage
         dashboardUrl:
-          user.userType === "super_admin" ? "/superadmin" : "/agent/dashboard",
+          user.userType === "admin" ? "/adminUser" : "/agent/dashboard",
       });
     } catch (error) {
       logger.error(`Login error: ${error.message}`);
@@ -357,7 +357,7 @@ class AuthController {
       user.isVerified = true;
       user.verificationToken = undefined;
 
-      // For business users, keep status as pending until super admin approval
+      // For business users, keep status as pending until admin approval
       // For customers, set status to active
       if (isBusinessUser(user.userType)) {
         user.status = "pending"; // Ensure business user remains pending
@@ -376,7 +376,7 @@ class AuthController {
 
       // Return appropriate message based on user type
       const message = isBusinessUser(user.userType)
-        ? "Account verified successfully. Your account is pending approval by a super admin. You will be notified once approved."
+        ? "Account verified successfully. Your account is pending approval by a admin. You will be notified once approved."
         : "Account verified successfully. You can now log in.";
 
       res.json({
@@ -730,8 +730,8 @@ class AuthController {
     }
   }
 
-  // Register super admin (system use only)
-  async registerSuperAdmin(req, res) {
+  // Register admin (system use only)
+  async registerAdmin(req, res) {
     try {
       const { fullName, email, phone, password } = req.body;
 
@@ -739,7 +739,7 @@ class AuthController {
       const existingUser = await User.findOne({ email });
       if (existingUser) {
         logger.warn(
-          `Super admin registration attempt with existing email: ${email}`
+          `admin registration attempt with existing email: ${email}`
         );
         return res.status(400).json({
           success: false,
@@ -747,53 +747,53 @@ class AuthController {
         });
       }
 
-      // Create super admin user
-      const superAdmin = new User({
+      // Create admin user
+      const adminUser = new User({
         fullName,
         email,
         phone,
         password,
-        userType: "super_admin",
-        isVerified: true, // Auto-verify super admin
+        userType: "admin",
+        isVerified: true, // Auto-verify admin
         isFirstTime: false,
       });
 
-      await superAdmin.save();
+      await adminUser.save();
 
       // Generate tokens
       const accessToken = this.generateAccessToken(
-        superAdmin._id,
-        "super_admin"
+        adminUser._id,
+        "admin"
       );
-      const refreshToken = this.generateRefreshToken(superAdmin._id);
+      const refreshToken = this.generateRefreshToken(adminUser._id);
 
       // Store refresh token
-      superAdmin.refreshToken = refreshToken;
-      await superAdmin.save();
+      adminUser.refreshToken = refreshToken;
+      await adminUser.save();
 
-      logger.info(`Super admin registered successfully: ${email}`);
+      logger.info(`admin registered successfully: ${email}`);
       res.status(201).json({
         success: true,
-        message: "Super admin account created successfully",
+        message: "admin account created successfully",
         user: {
-          id: superAdmin._id,
-          fullName: superAdmin.fullName,
-          email: superAdmin.email,
-          userType: superAdmin.userType,
+          id: adminUser._id,
+          fullName: adminUser.fullName,
+          email: adminUser.email,
+          userType: adminUser.userType,
         },
         accessToken,
         refreshToken,
       });
     } catch (error) {
-      logger.error(`Super admin registration error: ${error.message}`);
+      logger.error(`admin registration error: ${error.message}`);
       res.status(500).json({
         success: false,
-        message: "Super admin registration failed. Please try again.",
+        message: "admin registration failed. Please try again.",
       });
     }
   }
 
-  // List all users (super admin only)
+  // List all users (admin only)
   async listUsers(req, res) {
     try {
       const { status, userType, search } = req.query;
@@ -816,7 +816,7 @@ class AuthController {
         ];
       }
 
-      // No tenantId filtering; super admin sees all users
+      // No tenantId filtering; admin sees all users
       const users = await User.find(filter)
         .select("-password -refreshToken")
         .sort({ createdAt: -1 }); // Sort by newest first
@@ -830,7 +830,7 @@ class AuthController {
     }
   }
 
-  // Approve or reject agent (super admin only)
+  // Approve or reject agent (admin only)
   async updateAgentStatus(req, res) {
     try {
       const { id } = req.params;
@@ -862,7 +862,7 @@ class AuthController {
     }
   }
 
-  // Get single user by ID (super admin only)
+  // Get single user by ID (admin only)
   async getUserById(req, res) {
     try {
       const { id } = req.params;
@@ -879,7 +879,7 @@ class AuthController {
     }
   }
 
-  // Update user info (super admin only)
+  // Update user info (admin only)
   async updateUser(req, res) {
     try {
       const { id } = req.params;
@@ -919,7 +919,7 @@ class AuthController {
     }
   }
 
-  // Super admin: Reset user password
+  // admin: Reset user password
   async resetUserPassword(req, res) {
     try {
       const { id } = req.params;
@@ -947,7 +947,7 @@ class AuthController {
     }
   }
 
-  // Super admin: Delete user
+  // admin: Delete user
   async deleteUser(req, res) {
     try {
       const { id } = req.params;
@@ -966,7 +966,7 @@ class AuthController {
     }
   }
 
-  // Super admin: Impersonate user (return JWT for that user)
+  // admin: Impersonate user (return JWT for that user)
   async impersonateUser(req, res) {
     try {
       const { id } = req.params;
@@ -976,11 +976,11 @@ class AuthController {
           .status(404)
           .json({ success: false, message: "User not found" });
       }
-      // Only allow impersonation of non-super_admin users
-      if (user.userType === "super_admin") {
+      // Only allow impersonation of non-admin users
+      if (user.userType === "admin") {
         return res.status(403).json({
           success: false,
-          message: "Cannot impersonate another super admin",
+          message: "Cannot impersonate another admin",
         });
       }
       const token = this.generateAccessToken(user._id, user.userType);
@@ -1033,7 +1033,7 @@ export default {
   refreshToken: authController.refreshToken.bind(authController),
   resendVerification: authController.resendVerification.bind(authController),
   updateFirstTimeFlag: authController.updateFirstTimeFlag.bind(authController),
-  registerSuperAdmin: authController.registerSuperAdmin.bind(authController),
+  registerAdmin: authController.registerAdmin.bind(authController),
   listUsers: authController.listUsers.bind(authController),
   updateAgentStatus: authController.updateAgentStatus.bind(authController),
   getUserById: authController.getUserById.bind(authController),

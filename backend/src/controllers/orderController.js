@@ -11,7 +11,7 @@ import websocketService from "../services/websocketService.js"; // Added import 
 class OrderController {
   /**
    * Get the correct navigation link based on user type
-   * @param {string} userType - User type (agent, super_admin, etc.)
+   * @param {string} userType - User type (agent, admin, etc.)
    * @param {string} page - Page to navigate to (wallet, orders, etc.)
    * @returns {string} Navigation link
    */
@@ -21,9 +21,9 @@ class OrderController {
         wallet: "/agent/dashboard/wallet",
         orders: "/agent/dashboard/orders",
       },
-      super_admin: {
-        wallet: "/superadmin/wallet",
-        orders: "/superadmin/orders",
+      admin: {
+        wallet: "/adminUser/wallet",
+        orders: "/adminUser/orders",
       },
       admin: {
         wallet: "/admin/wallet",
@@ -167,9 +167,9 @@ class OrderController {
         sortOrder: req.query.sortOrder === "asc" ? 1 : -1,
       };
 
-      // For super admins, allow access to all orders (no tenant restriction)
+      // For admins, allow access to all orders (no tenant restriction)
       // For regular users, restrict to their tenant
-      const effectiveTenantId = userType === "super_admin" ? null : tenantId;
+      const effectiveTenantId = userType === "admin" ? null : tenantId;
 
       const result = await orderService.getOrders(
         effectiveTenantId,
@@ -223,9 +223,9 @@ class OrderController {
         sortOrder: req.query.sortOrder === "asc" ? 1 : -1,
       };
 
-      // For super admins, allow access to all orders (no tenant restriction)
+      // For admins, allow access to all orders (no tenant restriction)
       // For regular users, restrict to their tenant
-      const effectiveTenantId = userType === "super_admin" ? null : tenantId;
+      const effectiveTenantId = userType === "admin" ? null : tenantId;
 
       const result = await orderService.getOrders(
         effectiveTenantId,
@@ -253,10 +253,10 @@ class OrderController {
       const { tenantId, userType } = req.user;
       const { id } = req.params;
 
-      // For super admins, allow access to any order (no tenant restriction)
+      // For admins, allow access to any order (no tenant restriction)
       // For regular users, restrict to their tenant
       const query =
-        userType === "super_admin" ? { _id: id } : { _id: id, tenantId };
+        userType === "admin" ? { _id: id } : { _id: id, tenantId };
 
       const order = await Order.findOne(query)
         .populate("items.packageGroup", "name provider")
@@ -289,9 +289,9 @@ class OrderController {
       const { tenantId, userId, userType } = req.user;
       const { orderId, itemId } = req.params;
 
-      // For super admins, allow processing any order (no tenant restriction)
+      // For admins, allow processing any order (no tenant restriction)
       // For regular users, restrict to their tenant
-      const effectiveTenantId = userType === "super_admin" ? null : tenantId;
+      const effectiveTenantId = userType === "admin" ? null : tenantId;
 
       const order = await orderService.processOrderItem(
         orderId,
@@ -345,9 +345,9 @@ class OrderController {
       const { id } = req.params;
       const { reason } = req.body;
 
-      // For super admins, allow cancelling any order (no tenant restriction)
+      // For admins, allow cancelling any order (no tenant restriction)
       // For regular users, restrict to their tenant
-      const effectiveTenantId = userType === "super_admin" ? null : tenantId;
+      const effectiveTenantId = userType === "admin" ? null : tenantId;
 
       const result = await orderService.cancelOrder(
         id,
@@ -475,10 +475,10 @@ class OrderController {
         });
       }
 
-      // For super admins, allow updating any order (no tenant restriction)
+      // For admins, allow updating any order (no tenant restriction)
       // For regular users, restrict to their tenant
       const query =
-        userType === "super_admin" ? { _id: id } : { _id: id, tenantId };
+        userType === "admin" ? { _id: id } : { _id: id, tenantId };
 
       const order = await Order.findOne(query);
       if (!order) {
@@ -570,8 +570,8 @@ class OrderController {
 
       // Broadcast order status update via WebSocket
       try {
-        const superAdmins = await User.find({ userType: "super_admin" });
-        const superAdminIds = superAdmins.map((admin) => admin._id.toString());
+        const admins = await User.find({ userType: "admin" });
+        const adminIds = admins.map((admin) => admin._id.toString());
 
         websocketService.broadcastOrderStatusUpdate(
           {
@@ -584,7 +584,7 @@ class OrderController {
             items: updatedOrder.items,
           },
           updatedOrder.createdBy.toString(),
-          superAdminIds
+          adminIds
         );
       } catch (wsError) {
         logger.error(
@@ -631,7 +631,7 @@ class OrderController {
     }
   }
 
-  // Get monthly revenue for user (agent or super admin)
+  // Get monthly revenue for user (agent or admin)
   async getMonthlyRevenue(req, res) {
     try {
       const userId = req.user.userId;
@@ -972,10 +972,10 @@ class OrderController {
 
       for (const orderId of orderIds) {
         try {
-          // For super admins, allow processing any order (no tenant restriction)
+          // For admins, allow processing any order (no tenant restriction)
           // For regular users, restrict to their tenant
           const query =
-            userType === "super_admin"
+            userType === "admin"
               ? { _id: orderId }
               : { _id: orderId, tenantId };
 
@@ -1050,12 +1050,12 @@ class OrderController {
               );
             }
 
-            // Notify super admins about bulk processing
-            const superAdmins = await User.find(
-              { userType: "super_admin" },
+            // Notify admins about bulk processing
+            const admins = await User.find(
+              { userType: "admin" },
               "userType"
             );
-            for (const admin of superAdmins) {
+            for (const admin of admins) {
               await notificationService.createInAppNotification(
                 admin._id.toString(),
                 `Order ${
@@ -1147,9 +1147,9 @@ class OrderController {
 
       for (const orderId of orderIds) {
         try {
-          // For super admins, allow updating any order (no tenant restriction)
+          // For admins, allow updating any order (no tenant restriction)
           const effectiveTenantId =
-            userType === "super_admin" ? null : tenantId;
+            userType === "admin" ? null : tenantId;
 
           const updatedOrder = await orderService.updateReceptionStatus(
             orderId,
@@ -1208,11 +1208,11 @@ class OrderController {
         });
       }
 
-      // Only super admins can update reception status
-      if (userType !== "super_admin") {
+      // Only admins can update reception status
+      if (userType !== "admin") {
         return res.status(403).json({
           success: false,
-          message: "Only super admins can update reception status",
+          message: "Only admins can update reception status",
         });
       }
 

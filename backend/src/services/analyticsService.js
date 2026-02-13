@@ -11,11 +11,11 @@ import { getBusinessUserTypes } from "../utils/userTypeHelpers.js";
 
 class AnalyticsService {
   /**
-   * Get comprehensive analytics for super admin dashboard
+   * Get comprehensive analytics for admin dashboard
    * @param {string} timeframe - Time period (7d, 30d, 90d, 365d)
    * @returns {Promise<Object>} Analytics data
    */
-  async getSuperAdminAnalytics(timeframe = "30d") {
+  async getAdminAnalytics(timeframe = "30d") {
     try {
       const dateRange = this.getDateRange(timeframe);
 
@@ -62,8 +62,8 @@ class AnalyticsService {
 
       return result;
     } catch (error) {
-      logger.error(`Super admin analytics error: ${error.message}`);
-      throw new Error("Failed to generate super admin analytics");
+      logger.error(`admin analytics error: ${error.message}`);
+      throw new Error("Failed to generate admin analytics");
     }
   }
 
@@ -223,13 +223,13 @@ class AnalyticsService {
       "super_agent",
       "dealer",
       "super_dealer",
-      "super_admin",
+      "admin",
     ];
 
     allUserTypes.forEach((userType) => {
       // Convert user type to plural for display (e.g., agent -> agents)
       const pluralKey =
-        userType === "super_admin" ? "super_admins" : `${userType}s`;
+        userType === "admin" ? "admins" : `${userType}s`;
       byType[pluralKey] = userTypeMap[userType] || 0;
     });
 
@@ -755,7 +755,7 @@ class AnalyticsService {
   }
 
   /**
-   * Get chart data for super admin
+   * Get chart data for admin
    * @param {string} timeframe - Time period
    * @returns {Promise<Object>} Chart data
    */

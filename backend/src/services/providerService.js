@@ -4,7 +4,7 @@ import Package from '../models/Package.js';
 import logger from '../utils/logger.js';
 
 class ProviderService {
-  // Create provider (Admin/Super Admin only)
+  // Create provider (Admin/admin only)
   async createProvider(providerData) {
     try {
       // Check if provider already exists (global check)
@@ -95,7 +95,7 @@ class ProviderService {
     }
   }
 
-  // Update provider (Admin/Super Admin only)
+  // Update provider (Admin/admin only)
   async updateProvider(id, updateData, userId) {
     try {
       // Don't allow changing the provider code
@@ -127,7 +127,7 @@ class ProviderService {
     }
   }
 
-  // Soft delete provider (Admin/Super Admin only)
+  // Soft delete provider (Admin/admin only)
   async softDeleteProvider(id, userId) {
     try {
       const provider = await Provider.findOne({ 
@@ -149,7 +149,7 @@ class ProviderService {
     }
   }
 
-  // Restore provider (Admin/Super Admin only)
+  // Restore provider (Admin/admin only)
   async restoreProvider(id, userId) {
     try {
       const provider = await Provider.findOne({ 

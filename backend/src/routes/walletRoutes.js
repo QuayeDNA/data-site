@@ -35,44 +35,44 @@ router.post(
   walletController.requestWalletTopUp
 );
 
-// Routes for admins/super_admins
+// Routes for admins/admins
 router.post(
   "/top-up",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   validate(walletValidation.adminTopUp),
   walletController.topUpWallet
 );
 router.post(
   "/debit",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   validate(walletValidation.adminTopUp),
   walletController.adminDebitWallet
 );
 router.get(
   "/pending-requests",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   walletController.getPendingTopUpRequests
 );
 router.post(
   "/requests/:transactionId/process",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   validate(walletValidation.processTopUpRequest),
   walletController.processTopUpRequest
 );
 router.get(
   "/analytics",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   walletController.getWalletAnalytics
 );
 router.get(
   "/admin-transactions",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   walletController.getAdminTransactions
 );
 

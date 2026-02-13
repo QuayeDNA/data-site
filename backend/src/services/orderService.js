@@ -22,7 +22,7 @@ import { getPriceForUserType } from "../utils/pricingHelpers.js";
 class OrderService {
   /**
    * Get the correct navigation link based on user type
-   * @param {string} userType - User type (agent, super_admin, etc.)
+   * @param {string} userType - User type (agent, admin, etc.)
    * @param {string} page - Page to navigate to (wallet, orders, etc.)
    * @returns {string} Navigation link
    */
@@ -32,9 +32,9 @@ class OrderService {
         wallet: "/agent/dashboard/wallet",
         orders: "/agent/dashboard/orders",
       },
-      super_admin: {
-        wallet: "/superadmin/wallet",
-        orders: "/superadmin/orders",
+      admin: {
+        wallet: "/adminUser/wallet",
+        orders: "/adminUser/orders",
       },
       admin: {
         wallet: "/admin/wallet",
@@ -271,8 +271,8 @@ class OrderService {
         // Mark as paid immediately
         paymentStatus = "paid";
 
-        // Only set status to confirmed for super admins, agents stay pending
-        if (user.userType === "super_admin") {
+        // Only set status to confirmed for admins, agents stay pending
+        if (user.userType === "admin") {
           orderStatus = "confirmed";
         }
 
@@ -350,15 +350,15 @@ class OrderService {
     try {
       const { order, user, orderTotal, paymentStatus } = result;
 
-      // Notify super admins about new order
-      const superAdmins = await User.find(
-        { userType: "super_admin" },
+      // Notify admins about new order
+      const admins = await User.find(
+        { userType: "admin" },
         "userType"
       );
 
-      const superAdminIds = superAdmins.map((admin) => admin._id.toString());
+      const adminIds = admins.map((admin) => admin._id.toString());
 
-      for (const admin of superAdmins) {
+      for (const admin of admins) {
         await notificationService.createInAppNotification(
           admin._id.toString(),
           "New Order Created",
@@ -377,8 +377,8 @@ class OrderService {
         );
       }
 
-      // Broadcast order creation to all super admins via WebSocket
-      if (superAdminIds.length > 0) {
+      // Broadcast order creation to all admins via WebSocket
+      if (adminIds.length > 0) {
         websocketService.broadcastOrderCreatedToAdmins(
           {
             orderId: order._id.toString(),
@@ -396,7 +396,7 @@ class OrderService {
             items: order.items,
             createdAt: order.createdAt,
           },
-          superAdminIds
+          adminIds
         );
       }
 
@@ -610,8 +610,8 @@ class OrderService {
             // Wallet was deducted - mark as paid
             paymentStatus = "paid";
 
-            // Only set status to confirmed for super admins, agents stay pending
-            if (user.userType === "super_admin") {
+            // Only set status to confirmed for admins, agents stay pending
+            if (user.userType === "admin") {
               orderStatus = "confirmed";
             }
           } else {
@@ -684,12 +684,12 @@ class OrderService {
     try {
       const { user, orderCount, totalAmount } = result;
 
-      // Notify super admins about bulk order
-      const superAdmins = await User.find(
-        { userType: "super_admin" },
+      // Notify admins about bulk order
+      const admins = await User.find(
+        { userType: "admin" },
         "userType"
       );
-      for (const admin of superAdmins) {
+      for (const admin of admins) {
         await notificationService.createInAppNotification(
           admin._id.toString(),
           "Bulk Order Created",
@@ -765,7 +765,7 @@ class OrderService {
         excludeResolvedAfter3Days,
       } = filters;
 
-      // For super admins (tenantId is null), don't filter by tenant
+      // For admins (tenantId is null), don't filter by tenant
       // For regular users, filter by their tenant
       const query = tenantId ? { tenantId } : {};
 
@@ -824,7 +824,7 @@ class OrderService {
         if (currentUserId) {
           query.createdBy = currentUserId;
         } else {
-          // If no currentUserId (super admin), don't show any drafts
+          // If no currentUserId (admin), don't show any drafts
           query.status = { $ne: "draft" };
         }
       } else if (!status && currentUserId) {
@@ -901,7 +901,7 @@ class OrderService {
   // Process order item
   async processOrderItem(orderId, itemId, tenantId, userId) {
     return await this.executeWithTransaction(async (session) => {
-      // For super admins (tenantId is null), don't filter by tenant
+      // For admins (tenantId is null), don't filter by tenant
       // For regular users, filter by their tenant
       const query = tenantId ? { _id: orderId, tenantId } : { _id: orderId };
 
@@ -1084,12 +1084,12 @@ class OrderService {
           );
         }
 
-        // Notify super admins about order processing
-        const superAdmins = await User.find(
-          { userType: "super_admin" },
+        // Notify admins about order processing
+        const admins = await User.find(
+          { userType: "admin" },
           "userType"
         );
-        for (const admin of superAdmins) {
+        for (const admin of admins) {
           await notificationService.createInAppNotification(
             admin._id.toString(),
             "Order Processed",
@@ -1174,12 +1174,12 @@ class OrderService {
         );
       }
 
-      // Notify super admins about bulk order processing
-      const superAdmins = await User.find(
-        { userType: "super_admin" },
+      // Notify admins about bulk order processing
+      const admins = await User.find(
+        { userType: "admin" },
         "userType"
       );
-      for (const admin of superAdmins) {
+      for (const admin of admins) {
         await notificationService.createInAppNotification(
           admin._id.toString(),
           "Bulk Order Processing",
@@ -1247,7 +1247,7 @@ class OrderService {
     if (isBusinessUser(userType)) {
       matchCondition.createdBy = new mongoose.Types.ObjectId(userId);
     }
-    // For super admin, get all orders (no additional filter needed)
+    // For admin, get all orders (no additional filter needed)
 
     const result = await Order.aggregate([
       { $match: matchCondition },
@@ -1297,7 +1297,7 @@ class OrderService {
     if (isBusinessUser(userType)) {
       matchCondition.createdBy = new mongoose.Types.ObjectId(userId);
     }
-    // For super admin, get all orders (no additional filter needed)
+    // For admin, get all orders (no additional filter needed)
 
     const result = await Order.aggregate([
       { $match: matchCondition },
@@ -1512,12 +1512,12 @@ class OrderService {
           }
         );
 
-        // Notify super admins about draft order processing
-        const superAdmins = await User.find(
-          { userType: "super_admin" },
+        // Notify admins about draft order processing
+        const admins = await User.find(
+          { userType: "admin" },
           "userType"
         );
-        for (const admin of superAdmins) {
+        for (const admin of admins) {
           await notificationService.createInAppNotification(
             admin._id.toString(),
             "Draft Orders Processed",
@@ -1663,7 +1663,7 @@ class OrderService {
   async cancelOrder(orderId, tenantId, userId, reason) {
     // Execute the main transaction
     const result = await this.executeWithTransaction(async (session) => {
-      // For super admins (tenantId is null), don't filter by tenant
+      // For admins (tenantId is null), don't filter by tenant
       // For regular users, filter by their tenant
       const query = tenantId ? { _id: orderId, tenantId } : { _id: orderId };
 
@@ -1853,12 +1853,12 @@ class OrderService {
           );
         }
 
-        // Notify super admins about order cancellation
-        const superAdmins = await User.find(
-          { userType: "super_admin" },
+        // Notify admins about order cancellation
+        const admins = await User.find(
+          { userType: "admin" },
           "userType"
         );
-        for (const admin of superAdmins) {
+        for (const admin of admins) {
           let adminMessage = `Order ${
             order.orderNumber
           } has been cancelled by ${
@@ -1941,12 +1941,12 @@ class OrderService {
       }. Reception status changed to 'not_received'.`
     );
 
-    // Send notification to super admin
+    // Send notification to admin
     try {
-      // Find super admin users
-      const superAdmins = await User.find({ userType: "super_admin" });
+      // Find admin users
+      const admins = await User.find({ userType: "admin" });
 
-      for (const admin of superAdmins) {
+      for (const admin of admins) {
         await notificationService.createInAppNotification(
           admin._id.toString(),
           "Data Delivery Issue Reported",

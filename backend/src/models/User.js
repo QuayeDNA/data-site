@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema({
   },
   userType: {
     type: String,
-    enum: ["agent", "super_agent", "dealer", "super_dealer", "super_admin"],
+    enum: ["agent", "super_agent", "dealer", "super_dealer", "admin"],
     default: "agent",
   },
   // Multi-tenant fields

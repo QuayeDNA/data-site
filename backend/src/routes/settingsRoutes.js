@@ -18,15 +18,15 @@ router.get("/signup-approval", settingsController.getSignupApprovalSetting);
 router.use(authenticate);
 router.get("/wallet", settingsController.getWalletSettings);
 
-// All other routes require super admin authorization
-router.use(authorize("super_admin"));
+// All other routes require admin authorization
+router.use(authorize("admin"));
 
 // Site Management
 router.get("/site", settingsController.getSiteSettings);
 router.put("/site", settingsController.updateSiteSettings);
 router.post("/site/toggle", settingsController.toggleSiteStatus);
 
-// Signup Approval Setting - PUT requires super admin (GET is public above)
+// Signup Approval Setting - PUT requires admin (GET is public above)
 router.put("/signup-approval", settingsController.updateSignupApprovalSetting);
 
 // Storefront Auto-Approval
@@ -51,7 +51,7 @@ router.get("/system", settingsController.getSystemInfo);
 // Admin Password Change
 router.post("/admin/change-password", settingsController.changeAdminPassword);
 
-// Wallet Settings - PUT requires super admin
+// Wallet Settings - PUT requires admin
 router.put("/wallet", settingsController.updateWalletSettings);
 
 export default router;

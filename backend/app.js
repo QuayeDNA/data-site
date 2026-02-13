@@ -171,32 +171,6 @@ app.get("/health", (req, res) => {
   res.json({ status: "OK", timestamp: new Date().toISOString() });
 });
 
-// Redis health check
-app.get("/health/redis", async (req, res) => {
-  try {
-    const isRedisHealthy = await redisClient.ping();
-    const redisStatus = redisClient.getStatus();
-    res.json({
-      status: isRedisHealthy ? "OK" : "ERROR",
-      redis: {
-        connected: redisStatus.connected,
-        client: redisStatus.client,
-        ping: isRedisHealthy,
-      },
-      timestamp: new Date().toISOString(),
-    });
-  } catch (error) {
-    res.status(500).json({
-      status: "ERROR",
-      redis: {
-        connected: false,
-        error: error.message,
-      },
-      timestamp: new Date().toISOString(),
-    });
-  }
-});
-
 // Root endpoint - ASCII Landing Page
 app.get("/", (req, res) => {
   const asciiArt = `
@@ -264,7 +238,7 @@ app.get("/", (req, res) => {
 });
 
 // Error handling middleware
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   logger.error(`Server error: ${err.message}`);
   res.status(500).json({
     success: false,
@@ -292,12 +266,6 @@ process.on("SIGTERM", async () => {
   logger.info("SIGTERM received, shutting down gracefully");
   server.close(async () => {
     logger.info("HTTP server closed");
-    try {
-      await redisClient.disconnect();
-      logger.info("Redis connection closed");
-    } catch (error) {
-      logger.error("Error closing Redis connection:", error);
-    }
     process.exit(0);
   });
 });
@@ -306,12 +274,6 @@ process.on("SIGINT", async () => {
   logger.info("SIGINT received, shutting down gracefully");
   server.close(async () => {
     logger.info("HTTP server closed");
-    try {
-      await redisClient.disconnect();
-      logger.info("Redis connection closed");
-    } catch (error) {
-      logger.error("Error closing Redis connection:", error);
-    }
     process.exit(0);
   });
 });

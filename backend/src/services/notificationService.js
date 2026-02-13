@@ -15,7 +15,7 @@ class NotificationService {
 
   /**
    * Get the correct navigation link based on user type
-   * @param {string} userType - User type (agent, super_admin, etc.)
+   * @param {string} userType - User type (agent, admin, etc.)
    * @param {string} page - Page to navigate to (wallet, orders, etc.)
    * @returns {string} Navigation link
    */
@@ -25,9 +25,9 @@ class NotificationService {
         wallet: "/agent/dashboard/wallet",
         orders: "/agent/dashboard/orders",
       },
-      super_admin: {
-        wallet: "/superadmin/wallet",
-        orders: "/superadmin/orders",
+      admin: {
+        wallet: "/adminUser/wallet",
+        orders: "/adminUser/orders",
       },
       admin: {
         wallet: "/admin/wallet",

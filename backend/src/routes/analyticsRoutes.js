@@ -10,16 +10,16 @@ import logger from "../utils/logger.js";
 
 const router = express.Router();
 
-// Get comprehensive analytics for super admin
+// Get comprehensive analytics for admin
 router.get(
-  "/superadmin",
+  "/adminUser",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   async (req, res) => {
     try {
       const { timeframe = "30d" } = req.query;
 
-      const analytics = await analyticsService.getSuperAdminAnalytics(
+      const analytics = await analyticsService.getAdminAnalytics(
         timeframe
       );
 
@@ -28,7 +28,7 @@ router.get(
         data: analytics,
       });
     } catch (error) {
-      logger.error(`Super admin analytics error: ${error.message}`);
+      logger.error(`admin analytics error: ${error.message}`);
       res.status(500).json({
         success: false,
         message: "Failed to fetch analytics data",
@@ -62,11 +62,11 @@ router.get("/agent", authenticate, authorizeBusinessUser, async (req, res) => {
   }
 });
 
-// Get analytics summary (for both super admin and business users)
+// Get analytics summary (for both admin and business users)
 router.get(
   "/summary",
   authenticate,
-  authorize("agent", "super_agent", "dealer", "super_dealer", "super_admin"),
+  authorize("agent", "super_agent", "dealer", "super_dealer", "admin"),
   async (req, res) => {
     try {
       const { userType, userId, tenantId } = req.user;
@@ -74,8 +74,8 @@ router.get(
 
       let analytics;
 
-      if (userType === "super_admin") {
-        analytics = await analyticsService.getSuperAdminAnalytics(timeframe);
+      if (userType === "admin") {
+        analytics = await analyticsService.getAdminAnalytics(timeframe);
       } else {
         analytics = await analyticsService.getAgentAnalytics(
           userId,
@@ -102,7 +102,7 @@ router.get(
 router.get(
   "/charts",
   authenticate,
-  authorize("agent", "super_agent", "dealer", "super_dealer", "super_admin"),
+  authorize("agent", "super_agent", "dealer", "super_dealer", "admin"),
   async (req, res) => {
     try {
       const { userType, userId, tenantId } = req.user;
@@ -110,8 +110,8 @@ router.get(
 
       let chartData;
 
-      if (userType === "super_admin") {
-        const analytics = await analyticsService.getSuperAdminAnalytics(
+      if (userType === "admin") {
+        const analytics = await analyticsService.getAdminAnalytics(
           timeframe
         );
         chartData = analytics.charts;
@@ -141,7 +141,7 @@ router.get(
 router.get(
   "/realtime",
   authenticate,
-  authorize("super_admin"),
+  authorize("admin"),
   async (req, res) => {
     try {
       // Get today's metrics
