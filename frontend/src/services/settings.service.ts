@@ -16,7 +16,7 @@ export const settingsService = {
     apiGet<ApiResponse<{ isActive: boolean }>>(`${BASE}/site/status`),
 
   getSignupApproval: () =>
-    apiGet<ApiResponse<{ enabled: boolean }>>(`${BASE}/signup-approval`),
+    apiGet<ApiResponse<{ requireApprovalForSignup: boolean }>>(`${BASE}/signup-approval`),
 
   // ── Authenticated ───────────────────────
   getWalletSettings: () =>
@@ -32,16 +32,16 @@ export const settingsService = {
   toggleSite: () =>
     apiPost<ApiResponse>(`${BASE}/site/toggle`),
 
-  updateSignupApproval: (enabled: boolean) =>
-    apiPut<ApiResponse>(`${BASE}/signup-approval`, { enabled }),
+  updateSignupApproval: (requireApprovalForSignup: boolean) =>
+    apiPut<ApiResponse>(`${BASE}/signup-approval`, { requireApprovalForSignup }),
 
   getStorefrontAutoApprove: () =>
-    apiGet<ApiResponse<{ enabled: boolean }>>(
+    apiGet<ApiResponse<{ autoApproveStorefronts: boolean }>>(
       `${BASE}/storefront-auto-approve`,
     ),
 
-  updateStorefrontAutoApprove: (enabled: boolean) =>
-    apiPut<ApiResponse>(`${BASE}/storefront-auto-approve`, { enabled }),
+  updateStorefrontAutoApprove: (autoApproveStorefronts: boolean) =>
+    apiPut<ApiResponse>(`${BASE}/storefront-auto-approve`, { autoApproveStorefronts }),
 
   getCommissionSettings: () =>
     apiGet<ApiResponse<CommissionSettings>>(`${BASE}/commission`),

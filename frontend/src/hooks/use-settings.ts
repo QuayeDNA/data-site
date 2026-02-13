@@ -3,9 +3,9 @@ import { queryKeys } from "@/lib/query-keys";
 import { settingsService } from "@/services/settings.service";
 import type {
   SiteSettings,
-  ApiSettings,
   WalletSettings,
   CommissionSettings,
+  ApiSettings,
 } from "@/types";
 
 // ── Queries ─────────────────────────────────
@@ -85,13 +85,24 @@ export function useToggleSite() {
   });
 }
 
-export function useUpdateApiSettings() {
+export function useUpdateSignupApproval() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (data: Partial<ApiSettings>) =>
-      settingsService.updateApiSettings(data),
+    mutationFn: (enabled: boolean) =>
+      settingsService.updateSignupApproval(enabled),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: queryKeys.settings.api() });
+      qc.invalidateQueries({ queryKey: queryKeys.settings.signupApproval() });
+    },
+  });
+}
+
+export function useUpdateStorefrontAutoApprove() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (enabled: boolean) =>
+      settingsService.updateStorefrontAutoApprove(enabled),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: queryKeys.settings.storefrontAutoApprove() });
     },
   });
 }
@@ -114,6 +125,17 @@ export function useUpdateCommissionSettingsViaSettings() {
       settingsService.updateCommissionSettings(data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: queryKeys.settings.commission() });
+    },
+  });
+}
+
+export function useUpdateApiSettings() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (data: Partial<ApiSettings>) =>
+      settingsService.updateApiSettings(data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: queryKeys.settings.api() });
     },
   });
 }

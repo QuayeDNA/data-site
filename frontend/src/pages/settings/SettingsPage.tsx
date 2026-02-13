@@ -19,8 +19,10 @@ export default function SettingsPage() {
           <div className="rounded-lg border border-border bg-card p-6">
             <h2 className="text-lg font-semibold text-foreground">Site</h2>
             <p className="text-sm text-muted-foreground">
-              Site name: {siteSettings?.data?.siteName ?? "N/A"} — Status:{" "}
-              {siteSettings?.data?.isActive ? "Active" : "Maintenance"}
+              Site status: {siteSettings?.data?.isSiteOpen ? "Open" : "Closed"}
+              {siteSettings?.data?.customMessage && (
+                <span> — {siteSettings.data.customMessage}</span>
+              )}
             </p>
           </div>
 

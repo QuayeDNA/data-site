@@ -145,12 +145,14 @@ export interface Provider {
   _id: string;
   name: string;
   code: ProviderCode;
-  country: string;
   description?: string;
   logo?: { url: string; alt: string };
-  services: string[];
   isActive: boolean;
   isDeleted?: boolean;
+  salesCount?: number;
+  viewCount?: number;
+  createdBy?: string | User;
+  updatedBy?: string | User;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -158,9 +160,9 @@ export interface Provider {
 export interface CreateProviderPayload {
   name: string;
   code: ProviderCode;
-  country: string;
   description?: string;
-  services?: string[];
+  logo?: { url: string; alt: string };
+  isActive?: boolean;
 }
 
 // ──────────────────────────────────────────────
@@ -274,9 +276,13 @@ export interface ProcessTopUpPayload {
 }
 
 export interface WalletSettings {
-  minimumTopUp: number;
-  maximumTopUp: number;
-  minimumBalance: number;
+  minimumTopUpAmounts: {
+    agent: number;
+    super_agent: number;
+    dealer: number;
+    super_dealer: number;
+    default: number;
+  };
 }
 
 // ──────────────────────────────────────────────
@@ -343,9 +349,12 @@ export interface CommissionRecord {
 }
 
 export interface CommissionSettings {
-  defaultRate: number;
-  rates: Record<string, number>;
-  enabled: boolean;
+  agentCommission: number;
+  superAgentCommission: number;
+  dealerCommission: number;
+  superDealerCommission: number;
+  defaultCommissionRate: number;
+  customerCommission: number;
 }
 
 export interface CommissionMonthlySummary {
@@ -391,17 +400,15 @@ export interface RealtimeMetrics {
 // Settings Types
 // ──────────────────────────────────────────────
 export interface SiteSettings {
-  siteName: string;
-  isActive: boolean;
-  maintenanceMessage?: string;
-  supportEmail?: string;
-  supportPhone?: string;
+  isSiteOpen: boolean;
+  customMessage: string;
 }
 
 export interface ApiSettings {
-  rateLimit: number;
-  webhookUrl?: string;
-  apiKey?: string;
+  mtnApiKey: string;
+  telecelApiKey: string;
+  airtelTigoApiKey: string;
+  apiEndpoint: string;
 }
 
 export interface SystemInfo {

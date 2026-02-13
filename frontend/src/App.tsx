@@ -2,6 +2,7 @@ import { lazy, Suspense } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { BUSINESS_ROLES } from "@/types";
+import { Toaster } from "@/components/ui/sonner";
 
 // ── Guards & Layouts ────────────────────────
 import RoleGuard from "@/components/guards/RoleGuard";
@@ -231,6 +232,7 @@ export default function App() {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>
+      <Toaster />
     </AuthProvider>
   );
 }
