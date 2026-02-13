@@ -1,37 +1,27 @@
 import { useAuth } from "@/contexts/AuthContext";
 
-export default function DashboardPage() {
+export default function AdminDashboardPage() {
   const { user } = useAuth();
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
+      <h1 className="text-2xl font-bold text-foreground">Admin Dashboard</h1>
 
-      {/* Stat cards */}
+      {/* Platform overview cards */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard
-          label="Wallet Balance"
-          value={`GHS ${user?.walletBalance?.toFixed(2) ?? "0.00"}`}
-        />
-        <StatCard
-          label="Account Status"
-          value={user?.subscriptionStatus ?? "N/A"}
-        />
-        <StatCard label="Role" value={user?.userType ?? "N/A"} />
-        <StatCard
-          label="Verified"
-          value={user?.isVerified ? "Yes" : "No"}
-        />
+        <StatCard label="Total Users" value="—" />
+        <StatCard label="Orders Today" value="—" />
+        <StatCard label="Platform Revenue" value="GHS —" />
+        <StatCard label="Pending Top-ups" value="—" />
       </div>
 
-      {/* Quick links */}
       <div className="rounded-lg border border-border bg-card p-6">
         <h2 className="text-lg font-semibold text-foreground">
-          Welcome back, {user?.fullName}
+          Welcome, {user?.fullName}
         </h2>
         <p className="mt-2 text-muted-foreground">
-          Manage your orders, wallet, storefront, and commissions from the
-          sidebar.
+          You have full platform access. Manage users, process orders, configure
+          settings, and monitor analytics from the sidebar.
         </p>
       </div>
     </div>
