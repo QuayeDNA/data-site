@@ -247,7 +247,7 @@ class AuthController {
       res.json({
         success: true,
         user: userData,
-        token: accessToken,
+        accessToken: accessToken,
         refreshToken: refreshToken, // Also send in response for frontend storage
         dashboardUrl:
           user.userType === "admin" ? "/adminUser" : "/agent/dashboard",
@@ -539,7 +539,7 @@ class AuthController {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
-        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days to match JWT expiration
       };
 
       res.cookie("refreshToken", newRefreshToken, cookieOptions);
